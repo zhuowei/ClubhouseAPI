@@ -201,3 +201,174 @@ paths:
               examples:
                 users:
                   value: {"users":[{"user_id":1234,"name":"John Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>_thumbnail_250x250","username":"john_example","bio":"John Example is an exemplary user object","twitter":"john_example"}],"count":1,"next":null,"previous":null,"success":true}
+  /get_channels:
+    post:
+      summary: get all channels
+      # empty {} request body?
+      responses:
+        200:
+          description: list of channels
+          content:
+            application/json:
+              examples:
+                channels:
+                  value: {
+                    "channels": [{
+                        "creator_user_profile_id": 1234,
+                        "channel_id": 123456,
+                        "channel": "abcdefgh",
+                        "topic": "Example Topic",
+                        "is_private": false,
+                        "is_social_mode": false,
+                        "url": "https://www.joinclubhouse.com/room/abcdefgh",
+                        "club": {
+                            "club_id": 12345,
+                            "name": "Club name",
+                            "description": "Club description",
+                            "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250",
+                            "num_members": 123,
+                            "num_followers": 456,
+                            "enable_private": true,
+                            "is_follow_allowed": true,
+                            "is_membership_private": false,
+                            "is_community": false,
+                            "rules": [{
+                                "desc": "Description",
+                                "title": "Rule"
+                            }],
+                            "num_online": 0
+                        },
+                        "club_name": "Club name",
+                        "club_id": 12345,
+                        "welcome_for_user_profile": null,
+                        "num_other": 0,
+                        "has_blocked_speakers": false,
+                        "is_explore_channel": false,
+                        "num_speakers": 123,
+                        "num_all": 1234,
+                        "users": [{
+                            "user_id": 1234,
+                            "name": "John Example",
+                            "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>_thumbnail_250x250",
+                            "is_speaker": true,
+                            "is_moderator": true,
+                            "time_joined_as_speaker": "2021-01-20T00:00:00.000000+00:00",
+                            "is_followed_by_speaker": true,
+                            "is_invited_as_speaker": false
+                        }]
+                    }],
+                    "events": [],
+                    "success": true
+                  }
+  /join_channel:
+    post:
+      summary: join a channel.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                # just channel is enough
+                value: {"channel": "abcdefgh", "attribution_source": "optional/unknown?", "attribution_details": "optional/unknown?"}
+      responses:
+        200:
+          description: stuff needed to actually join a channel
+          content:
+            application/json:
+              examples:
+                channel:
+                  value: {
+                              "creator_user_profile_id": 1234,
+                              "channel_id": 123456,
+                              "channel": "abcdefgh",
+                              "topic": "Channel topic",
+                              "is_private": false,
+                              "is_social_mode": false,
+                              "url": "https://www.joinclubhouse.com/room/abcdefgh",
+                              "club": {
+                                  "club_id": 1234,
+                                  "name": "Club name",
+                                  "description": "Club description",
+                                  "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250",
+                                  "num_members": 123,
+                                  "num_followers": 567,
+                                  "enable_private": true,
+                                  "is_follow_allowed": true,
+                                  "is_membership_private": false,
+                                  "is_community": false,
+                                  "rules": [],
+                                  "num_online": 0
+                              },
+                              "club_name": "Startup Club",
+                              "club_id": 45,
+                              "welcome_for_user_profile": null,
+                              "is_handraise_enabled": true,
+                              "handraise_permission": 1,
+                              "is_club_member": false,
+                              "is_club_admin": false,
+                              "users": [{
+                                  "user_id": 123456,
+                                  "name": "John Example",
+                                  "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>_thumbnail_250x250",
+                                  "username": "john_example",
+                                  "first_name": "John",
+                                  "skintone": 3,
+                                  "is_new": true,
+                                  "is_speaker": true,
+                                  "is_moderator": true,
+                                  "time_joined_as_speaker": "2021-01-31T00:00:00.000000+00:00",
+                                  "is_followed_by_speaker": true,
+                                  "is_invited_as_speaker": true
+                              }, {
+                                  "user_id": 1234,
+                                  "name": "The currently joining user",
+                                  "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>_thumbnail_250x250",
+                                  "username": "currentuser",
+                                  "first_name": "Current",
+                                  "skintone": 3,
+                                  "is_new": false,
+                                  "is_speaker": false,
+                                  "is_moderator": false,
+                                  "time_joined_as_speaker": null,
+                                  "is_followed_by_speaker": false,
+                                  "is_invited_as_speaker": false
+                              }],
+                              "success": true,
+                              "is_empty": false,
+                              "token": "<token>",
+                              "rtm_token": "<rtm_token>",
+                              "pubnub_token": "<pubnub_token>",
+                              "pubnub_origin": null,
+                              "pubnub_heartbeat_value": 60,
+                              "pubnub_heartbeat_interval": 29,
+                              "pubnub_enable": true,
+                              "agora_native_mute": true
+                          }
+        400:
+          description: cannot join
+          content:
+            application/json:
+              examples:
+                appTooOld:
+                  value: {"error_message":"Please upgrade the app to join rooms!","success":false}
+                roomNotAvailable:
+                  # Also sent when channel ID is invalid?
+                  value: {"success":false,"error_message":"That room is no longer available 👋🏼\nTry starting a new one instead?"}
+  /leave_channel:
+    post:
+      summary: leave a channel.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                # just channel is enough
+                value: {"channel": "abcdefgh"}
+      responses:
+        200:
+          description: left the channel
+          content:
+            application/json:
+              examples:
+                channel:
+                  value: {"success":true}
