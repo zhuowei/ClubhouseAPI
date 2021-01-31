@@ -99,9 +99,20 @@ paths:
                 waitlisted:
                   value: {"is_waitlisted":true,"is_onboarding":true,"success":true}
         401:
-          descripton: authorization not provided
+          description: authorization not provided
           content:
             application/json:
               examples:
                 error:
                   value: {"detail":"Authentication credentials were not provided."}
+    /me:
+      post:
+        summary: gets user
+        responses:
+          200:
+            description: the response
+            content:
+              application/json:
+                examples:
+                  example:
+                    value: {"has_unread_notifications":false,"actionable_notifications_count":0,"num_invites":0,"auth_token":"<auth_token>","refresh_token":"<jwt>","access_token":"<jwt>","notifications_enabled":false,"user_profile":{"user_id":1234,"name":null,"photo_url":null,"username":null},"following_ids":null,"blocked_ids":null,"is_admin":false,"email":null,"feature_flags":[""],"success":true}
