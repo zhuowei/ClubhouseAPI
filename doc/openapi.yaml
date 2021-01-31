@@ -7,8 +7,13 @@ servers:
   - url: "https://www.clubhouseapi.com/api/"
 # User-Agent: Clubhouse
 # Content-Type: application/json
-# optional:
 # CH-Locale: en_US
+# CH-AppVersion: 0.2.15
+# CH-AppBuild: 269
+# Optional:
+# CH-UserId: 1234
+# Authorization: Token <auth_token>
+# curl -H "User-Agent: Clubhouse/269" -H "Content-Type: application/json" -D - -H "CH-Locale: en_US" -H "CH-AppVersion: 0.2.15" -H "CH-AppBuild: 269"
 paths:
   /start_phone_number_auth:
     post:
@@ -25,6 +30,8 @@ paths:
           content:
             application/json:
               examples:
+                success:
+                  value: {"success":true,"is_blocked":false,"error_message":null}
                 failure:
                   value: {"success":false,"is_blocked":false,"error_message":""}
                 phoneBlocked:
@@ -71,11 +78,30 @@ paths:
           application/json:
             example:
               jsonObject:
-                value: {"verificationCode": "123456", "phoneNumber": "1234567890"}
+                value: {"verification_code": "1234", "phone_number": "+1234567890"}
       responses:
         200:
           description: success
           content:
             application/json:
               examples:
-                jsonObject: {}
+                success:
+                  value: {"success":true,"is_verified":true,"user_profile":{"user_id":1234,"name":null,"photo_url":null,"username":null},"auth_token":"<auth_token>","refresh_token":"<jwt>","access_token":"<jwt>","is_waitlisted":true,"is_onboarding":true}
+  /check_waitlist_status:
+    post:
+      summary: checks waitlist status.
+      responses:
+        200:
+          description: got waitlist status
+          content:
+            application/json:
+              examples:
+                waitlisted:
+                  value: {"is_waitlisted":true,"is_onboarding":true,"success":true}
+        401:
+          descripton: authorization not provided
+          content:
+            application/json:
+              examples:
+                error:
+                  value: {"detail":"Authentication credentials were not provided."}
