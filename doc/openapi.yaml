@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  description: "Clubhouse API"
+  title: "Clubhouse API"
+  version: "1"
+servers:
+  - url: "https://www.clubhouseapi.com/api/"
+# User-Agent: Clubhouse
+# Content-Type: application/json
+# optional:
+# CH-Locale: en_US
+paths:
+  /start_phone_number_auth:
+    post:
+      summary: Starts phone number auth.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"phone_number": "+11234567890"}
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              examples:
+                failure:
+                  value: {"success":false,"is_blocked":false,"error_message":""}
+                phoneBlocked:
+                  value: {"success":true,"is_blocked":true}
+                throttled:
+                  value: {"success": false, "error_message": "Our systems have detected high usage of this feature from your account. Please try again later."}
+  /call_phone_number_auth:
+    post:
+      summary: Call phone number auth.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {}
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              examples:
+                jsonObject: {}
+  /resend_phone_number_auth:
+    post:
+      summary: Resend phone number auth.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {}
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              examples:
+                jsonObject: {}
+  /complete_phone_number_auth:
+    post:
+      summary: Call phone number auth.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"verificationCode": "123456", "phoneNumber": "1234567890"}
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              examples:
+                jsonObject: {}
