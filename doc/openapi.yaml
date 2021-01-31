@@ -105,14 +105,99 @@ paths:
               examples:
                 error:
                   value: {"detail":"Authentication credentials were not provided."}
-    /me:
-      post:
-        summary: gets user
-        responses:
-          200:
-            description: the response
-            content:
-              application/json:
-                examples:
-                  example:
-                    value: {"has_unread_notifications":false,"actionable_notifications_count":0,"num_invites":0,"auth_token":"<auth_token>","refresh_token":"<jwt>","access_token":"<jwt>","notifications_enabled":false,"user_profile":{"user_id":1234,"name":null,"photo_url":null,"username":null},"following_ids":null,"blocked_ids":null,"is_admin":false,"email":null,"feature_flags":[""],"success":true}
+  /me:
+    post:
+      summary: gets user
+      responses:
+        200:
+          description: the response
+          content:
+            application/json:
+              examples:
+                example:
+                  value: {"has_unread_notifications":false,"actionable_notifications_count":0,"num_invites":0,"auth_token":"<auth_token>","refresh_token":"<jwt>","access_token":"<jwt>","notifications_enabled":false,"user_profile":{"user_id":1234,"name":null,"photo_url":null,"username":null},"following_ids":null,"blocked_ids":null,"is_admin":false,"email":null,"feature_flags":[""],"success":true}
+  /get_release_notes:
+    post:
+      summary: gets release notes.
+      responses:
+        200:
+          description: the response
+          content:
+            application/json:
+              examples:
+                latest:
+                  value: {"should_display":true,"title":"🕹 You are now using the latest update of Clubhouse!","action":"See What's New","url":"https://whatsnew.joinclubhouse.com"}
+  /get_all_topics:
+    get:
+      summary: gets all topics.
+      responses:
+        200:
+          description: a list of topics
+          content:
+            application/json:
+              examples:
+                latest:
+                  value: {
+                    "topics": [{
+                        "title": "Example",
+                        "id": 1,
+                        "abbreviated_title": "Example",
+                        "topics": [{
+                            "title": "⏳ The Future",
+                            "id": 140,
+                            "abbreviated_title": "The Future"
+                        }]
+                    }]
+                  }
+  /get_topic:
+    post:
+      summary: looks up topic by ID.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"topic_id": 140}
+            # this also can take a club_id but I can't get it to work
+      responses:
+        200:
+          description: returns topic info
+          content:
+            application/json:
+              examples:
+                topic:
+                  value: {"topic":{"title":"⏳ The Future","id":140,"abbreviated_title":"The Future"},"success":true}
+  /get_clubs_for_topic:
+    post:
+      summary: looks up clubs by topic.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"topic_id": 140}
+      responses:
+        200:
+          description: returns list of clubs with pagination
+          content:
+            application/json:
+              examples:
+                clubs:
+                  value: {"clubs":[{"club_id":123,"name":"Example Club","description":"Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250","num_members":123,"num_followers":456,"is_member":false,"is_follower":false}],"count":1,"next":null,"previous":null,"success":true}
+  /get_users_for_topic:
+    post:
+      summary: looks up users by topic.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"topic_id": 140}
+      responses:
+        200:
+          description: returns list of users with pagination
+          content:
+            application/json:
+              examples:
+                users:
+                  value: {"users":[{"user_id":1234,"name":"John Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>_thumbnail_250x250","username":"john_example","bio":"John Example is an exemplary user object","twitter":"john_example"}],"count":1,"next":null,"previous":null,"success":true}
