@@ -479,3 +479,43 @@ paths:
                 invalidToken:
                   # seems it's using https://github.com/SimpleJWT/django-rest-framework-simplejwt
                   value: {"detail":"Token is invalid or expired","code":"token_not_valid"}
+  /get_suggested_club_invites:
+    post:
+      summary: uploads contacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              jsonObject:
+                # might also take club_id (number) and upload_contacts (bool)?
+                value: { "contacts": [{"name": "aaa", "phone_number": "+11234567890"}]}
+      responses:
+        200:
+          # I couldn't get this to return anything else.
+          description: returns list of suggested invites.
+          content:
+            application/json:
+              examples:
+                empty:
+                  value: {"suggested_invites":[],"success":true}
+  /get_club:
+    post:
+      summary: gets club by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              jsonObject:
+                value: {"club_id": 1234}
+      responses:
+        200:
+          description: returns club object
+          content:
+            application/json:
+              examples:
+                club:
+                  value: {"club":{"club_id":123,"name":"Example Club","description":"Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250","num_members":123,"num_followers":456,"is_member":false,"is_follower":false},"is_admin":false,"is_member":false,"is_follower":false,"is_pending_accept":false,"is_pending_approval":false,"added_by_user_profile":null,"member_user_ids":[],"num_invites":0,"invite_link":null,"topics":[{"title":"Topic Example","id":140,"abbreviated_title":"Topic Example"}],"success":true}
