@@ -22,7 +22,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"phone_number": "+11234567890"}
       responses:
@@ -51,7 +53,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {}
       responses:
@@ -67,7 +71,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {}
       responses:
@@ -83,7 +89,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"verification_code": "1234", "phone_number": "+1234567890"}
       responses:
@@ -121,14 +129,14 @@ paths:
           content:
             application/json:
               examples:
-                example:
+                examples:
                   value: {"has_unread_notifications":false,"actionable_notifications_count":0,"num_invites":0,"auth_token":"<auth_token>","refresh_token":"<jwt>","access_token":"<jwt>","notifications_enabled":false,"user_profile":{"user_id":1234,"name":null,"photo_url":null,"username":null},"following_ids":null,"blocked_ids":null,"is_admin":false,"email":null,"feature_flags":[""],"success":true}
         403:
           description: error response - happens if account is banned (is_blocked)
           content:
             application/json:
               examples:
-                example:
+                examples:
                   value: {"detail": "You do not have permission to perform this action."}
   /get_release_notes:
     post:
@@ -169,7 +177,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"topic_id": 140}
             # this also can take a club_id but I can't get it to work
@@ -187,7 +197,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"topic_id": 140}
       responses:
@@ -204,7 +216,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"topic_id": 140}
       responses:
@@ -280,7 +294,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 # just channel is enough
                 value: {"channel": "abcdefgh", "attribution_source": "optional/unknown?", "attribution_details": "optional/unknown?"}
@@ -374,7 +390,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 # just channel is enough
                 value: {"channel": "abcdefgh"}
@@ -392,7 +410,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"username": "hipsterhouse"}
       responses:
@@ -418,7 +438,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 # There's also supposed to be source_topic_id, source, user_ids; not sure what they're for
                 value: {"user_id": 1234}
@@ -436,7 +458,9 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
+            schema:
+              type: object
+            examples:
               jsonObject:
                 value: {"refresh": "<refresh_token>"}
       responses:
