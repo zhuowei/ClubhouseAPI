@@ -412,6 +412,24 @@ paths:
                   value: {"success":false,"error_message":"This username is not allowed. Please try another one."}
                 taken:
                   value: {"success":false,"error_message":"This username has already been taken by a different user."}
+  /follow:
+    post:
+      summary: follows a user
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                # There's also supposed to be source_topic_id, source, user_ids; not sure what they're for
+                value: {"user_id": 1234}
+      responses:
+        401:
+          description: waitlisted
+          content:
+            application/json:
+              examples:
+                waitlisted:
+                  value: {"success":false,"error_message":"Your account is waitlisted. Please contact us if this is in error."}
   /refresh_token:
     post:
       summary: gets an access_token from a refresh_token.
