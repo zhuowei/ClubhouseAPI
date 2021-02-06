@@ -10,9 +10,10 @@ servers:
 # CH-Locale: en_US
 # CH-AppVersion: 0.2.15
 # CH-AppBuild: 269
-# Optional:
+# Needed for authenticated APIs:
 # CH-UserId: 1234
 # Authorization: Token <auth_token>
+# (or Authorization: Bearer <access_token> if you want to use the JWT auth)
 # curl -H "User-Agent: Clubhouse/269" -H "Content-Type: application/json" -D - -H "CH-Locale: en_US" -H "CH-AppVersion: 0.2.15" -H "CH-AppBuild: 269"
 paths:
   /start_phone_number_auth:
@@ -35,6 +36,12 @@ paths:
                 failure:
                   value: {"success":false,"is_blocked":false,"error_message":""}
                 phoneBlocked:
+                  # Could be caused if app version header not present
+                  # or if account banned
+                  # I've had an account auto-banned after the first login ever
+                  # I'm not sure why
+                  # This happened to an actual Clubhouse user from the app as well:
+                  # https://www.reddit.com/r/ClubhouseApp/comments/lc2d89/got_invited_but_cannot_sign_in/
                   value: {"success":true,"is_blocked":true}
                 throttled:
                   value: {"success": false, "error_message": "Our systems have detected high usage of this feature from your account. Please try again later."}
@@ -116,6 +123,13 @@ paths:
               examples:
                 example:
                   value: {"has_unread_notifications":false,"actionable_notifications_count":0,"num_invites":0,"auth_token":"<auth_token>","refresh_token":"<jwt>","access_token":"<jwt>","notifications_enabled":false,"user_profile":{"user_id":1234,"name":null,"photo_url":null,"username":null},"following_ids":null,"blocked_ids":null,"is_admin":false,"email":null,"feature_flags":[""],"success":true}
+        403:
+          description: error response - happens if account is banned (is_blocked)
+          content:
+            application/json:
+              examples:
+                example:
+                  value: {"detail": "You do not have permission to perform this action."}
   /get_release_notes:
     post:
       summary: gets release notes.
@@ -372,3 +386,54 @@ paths:
               examples:
                 channel:
                   value: {"success":true}
+  /update_username:
+    post:
+      summary: edits username.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"username": "hipsterhouse"}
+      responses:
+        200:
+          description: username successfully set
+          content:
+            application/json:
+              examples:
+                success:
+                  value: {"success":true,"error_message":null}
+        400:
+          description: invalid/taken username (eg empty string)
+          content:
+            application/json:
+              examples:
+                emptyString:
+                  value: {"success":false,"error_message":"This username is not allowed. Please try another one."}
+                taken:
+                  value: {"success":false,"error_message":"This username has already been taken by a different user."}
+  /refresh_token:
+    post:
+      summary: gets an access_token from a refresh_token.
+      requestBody:
+        content:
+          application/json:
+            example:
+              jsonObject:
+                value: {"refresh": "<refresh_token>"}
+      responses:
+        200:
+          description: returns new access and refresh token
+          content:
+            application/json:
+              examples:
+                validToken:
+                  value: {"access":"<access_token>","refresh":"<refresh_token>"}
+        401:
+          description: invalid refresh token
+          content:
+            application/json:
+              examples:
+                invalidToken:
+                  # seems it's using https://github.com/SimpleJWT/django-rest-framework-simplejwt
+                  value: {"detail":"Token is invalid or expired","code":"token_not_valid"}
