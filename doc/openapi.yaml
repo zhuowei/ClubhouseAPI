@@ -5,15 +5,19 @@ info:
   version: "1"
 servers:
   - url: "https://www.clubhouseapi.com/api/"
-# User-Agent: Clubhouse
-# Content-Type: application/json
+# User-Agent: clubhouse/269 (iPhone; iOS 14.1; Scale/3.00)
+# Content-Type: application/json; charset=utf-8
+# CH-Languages: en-US
 # CH-Locale: en_US
 # CH-AppVersion: 0.2.15
 # CH-AppBuild: 269
+# CH-DeviceId: <uuid>
 # Needed for authenticated APIs:
-# CH-UserId: 1234
+# CH-UserID: 1234
 # Authorization: Token <auth_token>
 # (or Authorization: Bearer <access_token> if you want to use the JWT auth)
+# Clubhouse aggressively bans new user signups based partially on headers: see
+# https://github.com/zhuowei/ClubhouseAPI/issues/2
 # curl -H "User-Agent: Clubhouse/269" -H "Content-Type: application/json" -D - -H "CH-Locale: en_US" -H "CH-AppVersion: 0.2.15" -H "CH-AppBuild: 269"
 paths:
   /start_phone_number_auth:
@@ -490,7 +494,7 @@ paths:
             examples:
               jsonObject:
                 # might also take club_id (number) and upload_contacts (bool)?
-                value: { "contacts": [{"name": "aaa", "phone_number": "+11234567890"}]}
+                value: { "upload_contacts": true, "contacts": [{"name": "aaa", "phone_number": "+11234567890"}]}
       responses:
         200:
           # I couldn't get this to return anything else.
@@ -519,3 +523,39 @@ paths:
               examples:
                 club:
                   value: {"club":{"club_id":123,"name":"Example Club","description":"Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250","num_members":123,"num_followers":456,"is_member":false,"is_follower":false},"is_admin":false,"is_member":false,"is_follower":false,"is_pending_accept":false,"is_pending_approval":false,"added_by_user_profile":null,"member_user_ids":[],"num_invites":0,"invite_link":null,"topics":[{"title":"Topic Example","id":140,"abbreviated_title":"Topic Example"}],"success":true}
+  /check_for_update:
+    get:
+      summary: Clubhouse uses this to check for updates when app is not installed from App Store (eg TestFlight)
+      parameters:
+        - in: query
+          name: is_testflight
+          schema:
+            type: integer
+          example: 1
+      responses:
+        200:
+          description: no updates
+          content:
+            application/json:
+              examples:
+                noUpdate:
+                  value: {"has_update":false,"success":true}
+  /invite_from_waitlist:
+    post:
+      summary: wave to another user on the waitlist to give them access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              jsonObject:
+                value: {"user_id": 1234}
+      responses:
+        400:
+          description: your own account is waitlisted
+          content:
+            application/json:
+              examples:
+                waitlisted:
+                  value: {"success":false,"error_message":"Your account is waitlisted. Please contact us if this is in error."}
