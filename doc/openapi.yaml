@@ -534,12 +534,14 @@ paths:
           example: 1
       responses:
         200:
-          description: no updates
+          description: successful response
           content:
             application/json:
               examples:
                 noUpdate:
                   value: {"has_update":false,"success":true}
+                hasUpdate:
+                  value: {"has_update":true,"is_mandatory":true,"app_url":"https://apps.apple.com/us/app/id1503133294","app_version":"0.1.24","app_build":262,"success":true}
   /invite_from_waitlist:
     post:
       summary: wave to another user on the waitlist to give them access
@@ -559,3 +561,22 @@ paths:
               examples:
                 waitlisted:
                   value: {"success":false,"error_message":"Your account is waitlisted. Please contact us if this is in error."}
+  /get_following:
+    post:
+      summary: get a list of the users and clubs that this user is following. Returned users have bios truncated to ~80 characters.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              jsonObject:
+                value: {"user_id": 1234}
+      responses:
+        200:
+          description: returns list of users and clubs
+          content:
+            application/json:
+              examples:
+                success:
+                  value: {"users":[{"user_id":12345,"name":"John Smith","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<uuid>_thumbnail_250x250","username":"johnsmith","bio":"Bio","twitter":null}],"clubs":[{"club_id":123,"name":"Example Club","description":"Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250","num_members":123,"num_followers":456,"is_member":false,"is_follower":false}],"count":2,"next":null,"previous":null,"success":true}
