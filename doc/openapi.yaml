@@ -569,9 +569,30 @@ paths:
                 invalidToken:
                   # seems it's using https://github.com/SimpleJWT/django-rest-framework-simplejwt
                   value: {"detail":"Token is invalid or expired","code":"token_not_valid"}
+  /get_suggested_invites:
+    post:
+      summary: find users to invite based on phone number.
+      description:
+        (also see https://zerforschung.org/posts/clubhouse-telefonnummern-en/ for @zerforschung's analysis of the privacy implications of this API)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              hasContact:
+                value: {"club_id":null,"upload_contacts":false,"contacts":[{"phone_number": "+11234567890"}]}
+      responses:
+        200:
+          description: returns list of users that can be invited.
+          content:
+            application/json:
+              examples:
+                validUsers:
+                  value: {"num_invites":0,"suggested_invites":[{"phone_number":"+11234567890","in_app":false,"is_invited":false,"num_friends":0}],"success":true}
   /get_suggested_club_invites:
     post:
-      summary: uploads contacts
+      summary: find users to invite to clubs based on phone number
       requestBody:
         content:
           application/json:
@@ -671,7 +692,7 @@ paths:
                   value: {"users":[{"user_id":12345,"name":"John Smith","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<uuid>_thumbnail_250x250","username":"johnsmith","bio":"Bio","twitter":null}],"clubs":[{"club_id":123,"name":"Example Club","description":"Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250","num_members":123,"num_followers":456,"is_member":false,"is_follower":false}],"count":2,"next":null,"previous":null,"success":true}
   /get_suggested_follows_friends_only:
     post:
-      summary: uploads contacts during signup
+      summary: find people to follow by uploading contacts during signup
       requestBody:
         content:
           application/json:
