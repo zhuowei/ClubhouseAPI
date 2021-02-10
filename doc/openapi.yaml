@@ -224,6 +224,82 @@ paths:
               examples:
                 clubs:
                   value: {"clubs":[{"club_id":123,"name":"Example Club","description":"Example","photo_url":"https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250","num_members":123,"num_followers":456,"is_member":false,"is_follower":false}],"count":1,"next":null,"previous":null,"success":true}
+  /get_profile:
+    post:
+      summary: looks up user profile by ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              jsonObject:
+                value: {"user_id": 4075733}
+      responses:
+        200:
+          description: returns user profile info
+          content:
+            application/json:
+              examples:
+                user_profile:
+                  # invited_by_user_profile can be null if the queried user is not norminated by someone
+                  value: {
+                    "user_profile": {
+                      "user_id": 4075733,
+                      "name": "Junho Yeo",
+                      "displayname": null,
+                      "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>",
+                      "username": "junhoyeo",
+                      "bio": "🌸 Creating INEVITABLE™ Services",
+                      "twitter": null,
+                      "instagram": "_junhoyeo",
+                      "num_followers": 103,
+                      "num_following": 98,
+                      "time_created": "2021-01-28T12:30:25.625451+00:00",
+                      "follows_me": false,
+                      "is_blocked_by_network": false,
+                      "mutual_follows_count": 0,
+                      "mutual_follows": [],
+                      "notification_type": null,
+                      "invited_by_user_profile": {
+                        "user_id": 1234,
+                        "name": "Example Norminator",
+                        "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/<user_id>_<guid>_thumbnail_250x250",
+                        "username": "myexamplenorminator"
+                      },
+                      "clubs": [
+                        {
+                          "club_id": 12345,
+                          "name": "Club name",
+                          "description": "Club description",
+                          "photo_url": "https://clubhouseprod.s3.amazonaws.com:443/club_<club_id>_<guid>_thumbnail_250x250",
+                          "num_members": 123,
+                          "num_followers": 456,
+                          "enable_private": true,
+                          "is_follow_allowed": true,
+                          "is_membership_private": false,
+                          "is_community": false,
+                          "rules": [{
+                              "desc": "Description",
+                              "title": "Rule"
+                          }],
+                          "num_online": 0
+                        },
+                      ],
+                      "has_verified_email": true,
+                      "can_edit_username": true,
+                      "can_edit_name": true,
+                      "can_edit_displayname": true,
+                      "topics": [
+                        {
+                          "title": "🦄 Startups",
+                          "id": 107,
+                          "abbreviated_title": "Startups"
+                        }
+                      ]
+                    },
+                    "success": true
+                  }
   /get_users_for_topic:
     post:
       summary: looks up users by topic.
