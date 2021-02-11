@@ -649,6 +649,18 @@ paths:
                   value: {"has_update":false,"success":true}
                 hasUpdate:
                   value: {"has_update":true,"is_mandatory":true,"app_url":"https://apps.apple.com/us/app/id1503133294","app_version":"0.1.24","app_build":262,"success":true}
+  /invite_to_app:
+    post:
+      summary: invite a user to the app, using one of your invites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              jsonObject:
+                value: {"name":"John Smith","message":null,"phone_number":"+11234567890"}
+      responses:
   /invite_from_waitlist:
     post:
       summary: wave to another user on the waitlist to give them access
@@ -877,3 +889,22 @@ paths:
               examples:
                 success:
                   value: {"success": true}
+  /get_notifications:
+    get:
+      summary: get notifications (the bell icon)
+      parameters:
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          example: 20
+        - in: query
+          name: page
+          schema:
+            type: integer
+          example: 1
+      responses:
+  /get_actionable_notifications:
+    get:
+      summary: get actionable notifications (the bell again)
+      responses:
