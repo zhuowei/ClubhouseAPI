@@ -387,9 +387,13 @@ paths:
             schema:
               type: object
             examples:
-              jsonObject:
+              joinFromAppHomeScreen:
                 # just channel is enough
-                value: {"channel": "abcdefgh", "attribution_source": "optional/unknown?", "attribution_details": "optional/unknown?"}
+                # attribution_details is base64-encoded JSON:
+                # {"is_explore":false,"rank":1}
+                value: {"channel":"abcdefgh","attribution_source":"feed","attribution_details":"eyJpc19leHBsb3JlIjpmYWxzZSwicmFuayI6MX0="}
+              justChannelIsEnough:
+                value: {"channel":"abcdefgh"}
       responses:
         200:
           description: stuff needed to actually join a channel
@@ -908,3 +912,40 @@ paths:
     get:
       summary: get actionable notifications (the bell again)
       responses:
+  /get_create_channel_targets:
+    post:
+      summary: is fetched when you tap Create Room
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example: {}
+      response:
+  /create_channel:
+    post:
+      summary: creates a channel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              openNoTopic:
+                value: {"is_social_mode":false,"club_id":null,"user_ids":[],"is_private":false,"event_id":null,"topic":null}
+              socialWithTopic:
+                value: {"is_social_mode":true,"club_id":null,"user_ids":[],"is_private":false,"event_id":null,"topic":"topic"}
+              # TODO(zhuowei): private
+      response:
+  /get_suggested_speakers:
+    post:
+      summary: gets suggested users when you start a private room
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              startingPrivateRoom:
+                value: {"channel":null}
+      response:
