@@ -9,7 +9,7 @@ servers:
 # Content-Type: application/json; charset=utf-8
 # CH-Languages: en-US
 # CH-Locale: en_US
-# CH-AppVersion: 0.2.15
+# CH-AppVersion: 0.1.25
 # CH-AppBuild: 269
 # CH-DeviceId: <uuid>
 # Needed for authenticated APIs:
@@ -50,6 +50,9 @@ paths:
                   # This happened to an actual Clubhouse user from the app as well:
                   # https://www.reddit.com/r/ClubhouseApp/comments/lc2d89/got_invited_but_cannot_sign_in/
                   value: {"success":true,"is_blocked":true}
+                beingThrottled:
+                  # You'll get `number_of_attempts_remaining` before you being throttled
+                  value: {"success":true,"is_blocked":false,"number_of_attempts_remaining":3}
                 throttled:
                   value: {"success": false, "error_message": "Our systems have detected high usage of this feature from your account. Please try again later."}
   /call_phone_number_auth:
